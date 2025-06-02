@@ -45,6 +45,8 @@ def find_enclosing_struct(member_line: int) -> str | None:
             lines = f.readlines()
             for i in range(len(lines) -1, -1, -1):
                 line = lines[i].strip()
+                if not line:
+                    continue
                 line_nr = int(re.search(r'^\S+\s+\S+\s+(\d+)', line).group(1))
                 if line_nr == member_line:
                     found_member_line = True
@@ -124,7 +126,7 @@ def parse_tags():
 
             # Neu: Alle "member" (Felder in Structs) einsammeln
             # ctags kennzeichnet Felder oft mit "member" oder "anonMember"
-            if kind.endswith("member"):
+            if kind.lower().endswith("member"):
                 # Finde übergeordnete Struct-Definition in der Datei
                 struct_parent = find_enclosing_struct(line_nr)
                 if struct_parent:
